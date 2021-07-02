@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+option go_package = "github.com/Taiters/monstermaker/proto";
+
+message Event {
+    enum Type {
+        CLIENT_JOINED = 0;
+        CLIENT_LEFT = 1;
+        CLIENT_UPDATED = 2;
+
+        SERVER_WELCOME = 3;
+    }
+
+    message Client {
+        enum ConnectionStatus {
+            OFFLINE = 0;
+            ONLINE = 1;
+        }
+
+        enum State {
+            JOINING = 0;
+            JOINED = 1;
+        }
+
+        string id = 1;
+        string name = 2;
+        ConnectionStatus connectionStatus = 3;
+        State state = 4;
+    }
+
+    message Room {
+        string id = 1;
+        map<string, Client> clients = 2;
+    }
+
+    message ServerWelcome {
+        string clientId = 1;
+        Room room = 2;
+    }
+
+    Type type = 1;
+    oneof data {
+        Client client = 2;
+        Room room = 3;
+        ServerWelcome welcome = 4;
+    }
+}
+
+message ClientEvent {
+    enum Type {
+        NAME_CHANGE = 0;
+    }
+
+    message NameChange {
+        string Name = 1;
+    }
+
+    Type type = 1;
+    oneof data {
+        NameChange nameChange = 2;
+    }
+}
